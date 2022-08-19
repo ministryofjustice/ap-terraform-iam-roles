@@ -13,3 +13,4 @@ It contains:
 - `eks-role`: a role that can be assumed by an EKS cluster
 - `github-action-role`: a role that can be assumed by GitHub actions in a repo or repos
 - `assumable-role-federated-user`: a role that can be assumed by a federated user e.g. an `eks-role`
+- `assumable-iam-user`: a role that can be assumed by an IAM user or group in trusted account
