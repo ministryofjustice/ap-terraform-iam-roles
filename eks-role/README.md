@@ -34,7 +34,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_service_accounts"></a> [cluster\_service\_accounts](#input\_cluster\_service\_accounts) | The service accounts that can assume this role | `set(string)` | n/a | yes |
+| <a name="input_cluster_service_accounts"></a> [cluster\_service\_accounts](#input\_cluster\_service\_accounts) | The service accounts that can assume this role in the form NAMESPACE\_NAME:SERVICE\_ACCOUNT\_NAME e.g. 'kube-system:foo-service' | `set(string)` | n/a | yes |
 | <a name="input_force_detach_policies"></a> [force\_detach\_policies](#input\_force\_detach\_policies) | Whether policies should be detached from this role when destroying | `bool` | `true` | no |
 | <a name="input_max_session_duration"></a> [max\_session\_duration](#input\_max\_session\_duration) | Maximum CLI/API session duration in seconds between 3600 and 43200 | `number` | `3600` | no |
 | <a name="input_provider_url"></a> [provider\_url](#input\_provider\_url) | URL of the cluster OIDC Provider | `string` | n/a | yes |

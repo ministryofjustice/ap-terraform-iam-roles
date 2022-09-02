@@ -50,7 +50,7 @@ variable "role_policy_arns" {
 }
 
 variable "cluster_service_accounts" {
-  description = "The service accounts that can assume this role"
+  description = "The service accounts that can assume this role in the form NAMESPACE_NAME:SERVICE_ACCOUNT_NAME e.g. 'kube-system:foo-service'"
   type        = set(string)
 }
 
