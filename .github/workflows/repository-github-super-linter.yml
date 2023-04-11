@@ -12,7 +12,7 @@ on: # yamllint disable-line rule:truthy
       - synchronize
 
   schedule:
-    - cron: 15 10 * * *
+    - cron: 00 11 * * *
 
 permissions: read-all
 
