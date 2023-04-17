@@ -1,0 +1,46 @@
+---
+name: GitHub Super-Linter
+
+on: # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - main
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+
+  schedule:
+    - cron: 10 * * * *
+
+permissions: read-all
+
+jobs:
+  super-linter:
+    name: GitHub Super-Linter
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
+        with:
+          fetch-depth: 0
+
+      - name: GitHub Super-Linter
+        id: super_linter
+        uses: github/super-linter/slim@454ba4482ce2cd0c505bc592e83c06e1e37ade61 # v4.10.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTIONS_RUNNER_DEBUG: true
+          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false
+          # yamllint disable rule:line-length
+          VALIDATE_GITHUB_ACTIONS: false # yaml This is disabled until Super-Linter ships with a newer version of actionlint supports the new `var` context
+          # yamllint enable rule:line-length
+          # TODO: Fix all the shell scripts and re-enable these
+          VALIDATE_BASH: false
+          VALIDATE_BASH_EXEC: false
+          VALIDATE_SHELL_SHFMT: false
