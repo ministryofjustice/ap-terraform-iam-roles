@@ -36,6 +36,9 @@ jobs:
           token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
 
+      - name: Prepare Git options
+        run: bash ./scripts/git-setup.sh
+
       - name: Create new branch
         run: |
           date=$(date +%Y_%m_%d)
