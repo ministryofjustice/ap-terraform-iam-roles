@@ -35,10 +35,10 @@ jobs:
           fetch-depth: 0
 
       - name: Create new branch
-              run: |
-                date=$(date +%Y_%m_%d)
-                branch_name="date_$date"
-                git checkout -b $branch_name
+        run:
+          date=$(date +%Y_%m_%d)
+          branch_name="date_$date"
+          git checkout -b $branch_name
 
       - name: GitHub Super-Linter
         id: super_linter
@@ -57,7 +57,7 @@ jobs:
           VALIDATE_SHELL_SHFMT: false
       
       - name: Check for changes
-        run: |
+        run:
           git add .
           git commit -m "Updates from GitHub Actions Super Linter"
           branch_name=$(git branch --show-current)
@@ -71,18 +71,17 @@ jobs:
           fi
 
       - name: Push changes
-        run: |
+        run:
           git config --global push.autoSetupRemote true
           git push
 
       - name: Create pull request
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
+        run:
           pr_title="GitHub Actions Super Linter workflow"
           pr_body="This PR is a test and can be ignored"
           branch_name=$(git branch --show-current)
           pr_head="${{ github.repository_owner }}:${branch_name}"
           pr_base="main"
           gh pr create --title "$pr_title" --body "$pr_body" --head "$pr_head" --base "$pr_base" --label "code quality"
-          
