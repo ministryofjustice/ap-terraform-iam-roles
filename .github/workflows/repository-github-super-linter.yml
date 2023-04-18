@@ -14,7 +14,11 @@ on: # yamllint disable-line rule:truthy
   schedule:
     - cron: 17 4 * * 1-5
 
-permissions: read-all
+permissions: read-all|write-all
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref }}'
+  cancel-in-progress: true
 
 jobs:
   super-linter:
@@ -27,7 +31,14 @@ jobs:
         id: checkout
         uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
+
+      - name: Create new branch
+              run: |
+                date=$(date +%Y_%m_%d)
+                branch_name="date_$date"
+                git checkout -b $branch_name
 
       - name: GitHub Super-Linter
         id: super_linter
@@ -44,3 +55,33 @@ jobs:
           VALIDATE_BASH: false
           VALIDATE_BASH_EXEC: false
           VALIDATE_SHELL_SHFMT: false
+      
+      - name: Check for changes
+        run: |
+          git add .
+          git commit -m "Updates from GitHub Actions Super Linter"
+          branch_name=$(git branch --show-current)
+          changes=$(git diff origin/main...$branch_name --name-only)
+          if [ -z "$changes" ]; then
+            echo "No changes detected."
+            exit 1
+          else
+            echo "Changes detected."
+            exit 0
+          fi
+
+      - name: Push changes
+        run: |
+          git config --global push.autoSetupRemote true
+          git push
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr_title="GitHub Actions Super Linter workflow"
+          pr_body="This PR is a test and can be ignored"
+          branch_name=$(git branch --show-current)
+          pr_head="${{ github.repository_owner }}:${branch_name}"
+          pr_base="main"
+          gh pr create --title "$pr_title" --body "$pr_body" --head "$pr_head" --base "$pr_base" --label "code quality"
