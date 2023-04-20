@@ -75,7 +75,7 @@ jobs:
 
       - name: Push changes
         run: |
-          git push
+          git push origin HEAD:$branch_name
 
       - name: Create pull request
         env:
