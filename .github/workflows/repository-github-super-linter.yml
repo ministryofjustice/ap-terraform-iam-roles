@@ -51,7 +51,7 @@ jobs:
         uses: github/super-linter/slim@454ba4482ce2cd0c505bc592e83c06e1e37ade61 # v4.10.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ACTIONS_RUNNER_DEBUG: true
+          ACTIONS_STEP_DEBUG: true
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
           # yamllint disable rule:line-length
