@@ -75,7 +75,6 @@ jobs:
 
       - name: Push changes
         run: |
-          git config --global push.autoSetupRemote true
           git push origin HEAD
 
       - name: Create pull request
