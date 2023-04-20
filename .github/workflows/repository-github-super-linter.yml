@@ -64,7 +64,7 @@ jobs:
       - name: Check for changes
         run: |
           git add .
-          git commit -m "Updates from GitHub Actions Super Linter"
+          git diff --exit-code || git commit -m "Updates from GitHub Actions Super Linter"
           branch_name=$(git branch --show-current)
           changes=$(git diff origin/main...$branch_name --name-only)
           if [ -z "$changes" ]; then
