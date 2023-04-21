@@ -33,7 +33,6 @@ jobs:
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Prepare Git options
         run: bash ./scripts/git-setup.sh
@@ -76,7 +75,6 @@ jobs:
 
       - name: Push changes
         run: |
-          git config --global push.autoSetupRemote true
           git push origin $branch_name
 
       - name: Create pull request
