@@ -76,7 +76,8 @@ jobs:
 
       - name: Push changes
         run: |
-          git push origin $branch_name
+          git config --global push.autoSetupRemote true
+          git push
 
       - name: Create pull request
         env:
