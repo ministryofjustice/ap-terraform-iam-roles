@@ -10,6 +10,7 @@ on: # yamllint disable-line rule:truthy
       - opened
       - reopened
       - synchronize
+  workflow_dispatch: null
 
   schedule:
     - cron: 17 4 * * 1-5
@@ -19,7 +20,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.ref }}'
+  group: '${{ github.ref }}-${{ github.workflow }}'
   cancel-in-progress: true
 
 jobs:
@@ -33,7 +34,7 @@ jobs:
         id: checkout
         uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
-          token: '${{ secrets.BOT_GITHUB_TOKEN }}'
+          token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
 
       - name: Create new branch
@@ -46,7 +47,7 @@ jobs:
         id: super_linter
         uses: github/super-linter/slim@454ba4482ce2cd0c505bc592e83c06e1e37ade61 # v4.10.1
         env:
-          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ACTIONS_STEP_DEBUG: true
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
