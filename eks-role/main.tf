@@ -1,37 +1,27 @@
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+
 locals {
   provider_url_normalised = replace(var.provider_url, "https://", "")
 }
 
-data "aws_caller_identity" "current" {}
-
-data "aws_partition" "current" {}
-
 data "aws_iam_policy_document" "assume_role_with_oidc" {
-
   statement {
-    effect = "Allow"
-
+    effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
-
     principals {
-      type = "Federated"
-
-      identifiers = [
-        "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.provider_url_normalised}"
-      ]
+      type        = "Federated"
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.provider_url_normalised}"]
     }
-
     condition {
       test     = "StringEquals"
       variable = "${local.provider_url_normalised}:sub"
       values   = [for s in var.cluster_service_accounts : "system:serviceaccount:${s}"]
     }
   }
-
 }
 
 resource "aws_iam_role" "this" {
-
   assume_role_policy    = data.aws_iam_policy_document.assume_role_with_oidc.json
   description           = var.role_description
   force_detach_policies = var.force_detach_policies
@@ -48,5 +38,4 @@ resource "aws_iam_role_policy_attachment" "this" {
 
   role       = aws_iam_role.this.name
   policy_arn = element(var.role_policy_arns, count.index)
-
 }
