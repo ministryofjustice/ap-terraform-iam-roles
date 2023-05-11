@@ -34,9 +34,6 @@ jobs:
           token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
 
-      - name: Prepare Git options
-        run: bash ./scripts/git-setup.sh
-
       - name: Create new branch
         run: |
           date=$(date +%Y_%m_%d)
@@ -63,6 +60,8 @@ jobs:
       - name: Check for changes
         run: |
           git add .
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git diff --exit-code || git commit -m "Updates from GitHub Actions Super Linter"
           branch_name=$(git branch --show-current)
           changes=$(git diff origin/main...$branch_name --name-only)
