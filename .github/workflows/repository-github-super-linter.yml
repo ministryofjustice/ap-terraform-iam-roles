@@ -100,14 +100,14 @@ jobs:
           git commit -m "Superlineter automatic code improvements"
 
       - name: Push changes
-        if: steps.check_changes.outputs.exists == 'true'
+        if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
           git push origin $branch_name
 
       - name: Create pull request
-        if: steps.check_changes.outputs.exists == 'true'
+        if: steps.check_changes.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
