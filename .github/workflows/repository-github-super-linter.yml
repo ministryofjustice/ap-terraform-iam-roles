@@ -33,13 +33,34 @@ jobs:
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
+          ref: main
 
+      - name: Check branch
+        id: branch
+        run: |
+          date=$(date +%Y_%m_%d)
+          branch_name="date_$date"
+          if git show-ref --quiet refs/heads/$branch_name; then
+            echo "$branch_name branch exists"
+            echo "::set-output name=exists::true"
+            exit 0
+          fi
+          echo "::set-output name=exists::false"
+           
       - name: Create new branch
+        if: steps.branch.outputs.exists == "false"
         run: |
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
           git checkout -b $branch_name
-          git push -u origin $branch_name || true
+          git push -u origin $branch_name
+        
+      - name: checkout branch
+        if: steps.branch.outputs.exists == "true"
+        run: |
+          date=$(date +%Y_%m_%d)
+          branch_name="date_$date"
+          git checkout $branch_name
 
       - name: GitHub Super-Linter
         id: super_linter
@@ -60,9 +81,10 @@ jobs:
       
       - name: Check for changes
         run: |
-          git add .
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git branch
+          git add .
           git diff --exit-code || git commit -m "Updates from GitHub Actions Super Linter"
           branch_name=$(git branch --show-current)
           changes=$(git diff origin/main...$branch_name --name-only)
