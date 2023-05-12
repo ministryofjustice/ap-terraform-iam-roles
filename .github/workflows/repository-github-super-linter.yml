@@ -47,7 +47,7 @@ jobs:
           echo "::set-output name=exists::false"
            
       - name: Create new branch
-        if: steps.branch.outputs.exists == "false"
+        if: steps.branch.outputs.exists == 'false'
         run: |
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
@@ -55,7 +55,7 @@ jobs:
           git push -u origin $branch_name
         
       - name: checkout branch
-        if: steps.branch.outputs.exists == "true"
+        if: steps.branch.outputs.exists == 'true'
         run: |
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
