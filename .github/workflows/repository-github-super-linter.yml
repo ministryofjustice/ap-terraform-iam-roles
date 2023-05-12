@@ -87,7 +87,7 @@ jobs:
             echo "::set-output name=has_changes::false"
           fi
         
-      -name: add and commit changes
+      - name: add and commit changes
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git config --local user.name 'Github Actions'
