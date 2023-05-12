@@ -33,30 +33,29 @@ jobs:
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
           fetch-depth: 0
-          ref: ${{ github.ref_name }}
 
-      # - name: Check branch
-      #   id: branch
-      #   run: |
-      #     date=$(date +%Y_%m_%d)
-      #     branch_name="date_$date"
-      #     if git show-ref --quiet refs/heads/$branch_name; then
-      #       echo "$branch_name branch exists"
-      #       echo "::set-output name=exists::true"
-      #       exit 0
-      #     fi
-      #     echo "::set-output name=exists::false"
+      - name: Check branch
+        id: branch
+        run: |
+          date=$(date +%Y_%m_%d)
+          branch_name="date_$date"
+          if git ls-remote --exit-code --heads origin $branch_name; then
+            echo "$branch_name branch exists"
+            echo "::set-output name=exists::true"
+            exit 0
+          fi
+          echo "::set-output name=exists::false"
            
-      # - name: Create new branch
-      #   if: steps.branch.outputs.exists == 'false'
-      #   run: |
-      #     date=$(date +%Y_%m_%d)
-      #     branch_name="date_$date"
-      #     git checkout -b $branch_name
-      #     git push -u origin $branch_name
+      - name: Create new branch
+        if: steps.branch.outputs.exists == 'false'
+        run: |
+          date=$(date +%Y_%m_%d)
+          branch_name="date_$date"
+          git checkout -b $branch_name
+          git push -u origin $branch_name
         
       - name: checkout branch
-        # if: steps.branch.outputs.exists == 'true'
+        if: steps.branch.outputs.exists == 'true'
         run: |
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
