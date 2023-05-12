@@ -81,6 +81,7 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
+          echo " " >> README.md
           if ! git diff --quiet; then
             echo "::set-output name=has_changes::true"
           else 
@@ -89,7 +90,7 @@ jobs:
         
       - name: add changes
         if: steps.check_changes.outputs.has_changes == 'true'
-        run: git add
+        run: git add .
 
       - name: commit changes
         if: steps.check_changes.outputs.has_changes == 'true'
