@@ -93,7 +93,7 @@ jobs:
           git config --local user.name 'Github Actions'
           git config --local user.email 'actions@github.com'
           git add .
-          git commit -m Superlineter automatic code improvements
+          git commit -m "Superlineter automatic code improvements"
 
       - name: Push changes
         if: steps.check_changes.outputs.exists == 'true'
