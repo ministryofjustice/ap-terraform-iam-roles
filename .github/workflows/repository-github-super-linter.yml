@@ -82,7 +82,7 @@ jobs:
         id: check_changes
         run: |
           if ! git diff --quiet; then
-            echo  "::set-output name=has_changes::true"
+            echo "::set-output name=has_changes::true"
           else 
             echo "::set-output name=has_changes::false"
           fi
@@ -113,3 +113,6 @@ jobs:
           pr_head="${{ github.repository_owner }}:${branch_name}"
           pr_base="main"
           gh pr create --title "$pr_title" --body "$pr_body" --head "$pr_head" --base "$pr_base" --label "code quality"
+
+
+          
