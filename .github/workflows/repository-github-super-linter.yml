@@ -87,12 +87,15 @@ jobs:
             echo "::set-output name=has_changes::false"
           fi
         
-      - name: add and commit changes
+      - name: add changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: git add
+
+      - name: commit changes
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git config --local user.name 'Github Actions'
           git config --local user.email 'actions@github.com'
-          git add .
           git commit -m "Superlineter automatic code improvements"
 
       - name: Push changes
@@ -115,4 +118,4 @@ jobs:
           gh pr create --title "$pr_title" --body "$pr_body" --head "$pr_head" --base "$pr_base" --label "code quality"
 
 
-          
+
