@@ -79,27 +79,31 @@ jobs:
           
       
       - name: Check for changes
+        id: changes
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git branch
+          git config --local user.name 'Github Actions'
+          git config --local user.email 'actions@github.com'
           git add .
           git diff --exit-code || git commit -m "Updates from GitHub Actions Super Linter"
           branch_name=$(git branch --show-current)
           changes=$(git diff origin/main...$branch_name --name-only)
           if [ -z "$changes" ]; then
             echo "No changes detected."
-            exit 1
+            echo "::set-output name=exists::true"
           else
             echo "Changes detected."
-            exit 0
+            echo "::set-output name=exists::false"
           fi
 
       - name: Push changes
+        if: steps.changes.outputs.exists == 'true'
         run: |
-          git push 
+          date=$(date +%Y_%m_%d)
+          branch_name="date_$date"
+          git push origin $branch_name
 
       - name: Create pull request
+        if: steps.changes.outputs.exists == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
