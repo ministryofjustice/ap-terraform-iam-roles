@@ -39,7 +39,7 @@ jobs:
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
           git checkout -b $branch_name
-          git push -u origin $branch_name
+          git push -u origin $branch_name || true
 
       - name: GitHub Super-Linter
         id: super_linter
