@@ -78,33 +78,32 @@ jobs:
           VALIDATE_SHELL_SHFMT: false
           
           
-      
       - name: Check for changes
-        id: changes
+        id: check_changes
+        run: |
+          if ! git diff --quiet; then
+            echo  "::set-output name=has_changes::true"
+          else 
+            echo "::set-output name=has_changes::false"
+          fi
+        
+        -name: add and commit changes
+        if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git config --local user.name 'Github Actions'
           git config --local user.email 'actions@github.com'
           git add .
-          git diff --exit-code || git commit -m "Updates from GitHub Actions Super Linter"
-          branch_name=$(git branch --show-current)
-          changes=$(git diff origin/main...$branch_name --name-only)
-          if [ -z "$changes" ]; then
-            echo "No changes detected."
-            echo "::set-output name=exists::true"
-          else
-            echo "Changes detected."
-            echo "::set-output name=exists::false"
-          fi
+          git commit -m Superlineter automatic code improvements
 
       - name: Push changes
-        if: steps.changes.outputs.exists == 'true'
+        if: steps.check_changes.outputs.exists == 'true'
         run: |
           date=$(date +%Y_%m_%d)
           branch_name="date_$date"
           git push origin $branch_name
 
       - name: Create pull request
-        if: steps.changes.outputs.exists == 'true'
+        if: steps.check_changes.outputs.exists == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
