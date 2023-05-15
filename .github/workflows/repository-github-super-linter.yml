@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  lint:
     name: GitHub Super-Linter
     runs-on: ubuntu-latest
     steps:
